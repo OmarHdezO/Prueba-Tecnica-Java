@@ -1,6 +1,6 @@
 Proyecto desarrollado con:
-Java 17
-Spring Boot
+Java 21
+Spring Boot 3.5.11
 Spring Data JPA
 Thymeleaf
 H2 Database
