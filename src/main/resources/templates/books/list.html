@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Libros')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container mt-4">
+
+  <h2>Libros</h2>
+
+  <!-- Mensajes -->
+  <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+  <div th:if="${errorMessage}"   class="alert alert-danger"  th:text="${errorMessage}"></div>
+
+  <!-- Barra de búsqueda y botón -->
+  <div class="d-flex gap-2 my-3">
+    <input type="text" id="search" class="form-control"
+           placeholder="Buscar por título, autor o ISBN..."
+           oninput="filtrar(this.value)">
+    <a href="/books/new" class="btn btn-primary text-nowrap">+ Agregar</a>
+  </div>
+
+  <!-- Tabla -->
+  <table class="table table-bordered table-hover" id="tablaLibros">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Autor</th>
+        <th>ISBN</th>
+        <th>Año</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="book : ${books}" class="fila">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.isbn}"></td>
+        <td th:text="${book.publicationYear}"></td>
+        <td>
+          <span th:text="${book.status}"
+                th:classappend="${book.status.name() == 'AVAILABLE'} ? 'badge bg-success'
+                               : (${book.status.name() == 'BORROWED'} ? 'badge bg-danger'
+                               : 'badge bg-warning text-dark')">
+          </span>
+        </td>
+        <td>
+          <!-- Solo si está disponible -->
+          <a th:if="${book.status.name() == 'AVAILABLE'}"
+             th:href="@{/loans/new(bookId=${book.id})}"
+             class="btn btn-sm btn-success me-1">Prestar</a>
+
+          <form th:if="${book.status.name() == 'AVAILABLE'}"
+                th:action="@{/books/{id}/delete(id=${book.id})}"
+                method="post" style="display:inline;"
+                onsubmit="return confirm('¿Eliminar este libro?')">
+            <button class="btn btn-sm btn-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(books)}">
+        <td colspan="7" class="text-center text-muted">No hay libros registrados.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+<script>
+  function filtrar(texto) {
+    document.querySelectorAll('#tablaLibros .fila').forEach(fila => {
+      fila.style.display =
+        fila.innerText.toLowerCase().includes(texto.toLowerCase()) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>

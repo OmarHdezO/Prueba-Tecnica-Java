@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Inicio')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container mt-4">
+
+  <h2>Dashboard</h2>
+
+  <!-- Tarjetas de estadísticas -->
+  <div class="row g-3 mt-2">
+    <div class="col-md-4">
+      <div class="card text-white bg-primary">
+        <div class="card-body">
+          <h5 class="card-title">Total Libros</h5>
+          <p class="card-text fs-3 fw-bold" th:text="${stats.totalBooks}">0</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-white bg-success">
+        <div class="card-body">
+          <h5 class="card-title">Disponibles</h5>
+          <p class="card-text fs-3 fw-bold" th:text="${stats.availableBooks}">0</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-white bg-danger">
+        <div class="card-body">
+          <h5 class="card-title">Prestados</h5>
+          <p class="card-text fs-3 fw-bold" th:text="${stats.borrowedBooks}">0</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card text-white bg-info">
+        <div class="card-body">
+          <h5 class="card-title">Préstamos Activos</h5>
+          <p class="card-text fs-3 fw-bold" th:text="${stats.activeLoans}">0</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card text-white bg-warning">
+        <div class="card-body">
+          <h5 class="card-title">Préstamos Vencidos</h5>
+          <p class="card-text fs-3 fw-bold" th:text="${stats.overdueLoans}">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acciones rápidas -->
+  <div class="mt-4">
+    <a href="/books/new" class="btn btn-primary me-2">+ Agregar Libro</a>
+    <a href="/loans/new" class="btn btn-success me-2">+ Nuevo Préstamo</a>
+    <a href="/books" class="btn btn-outline-secondary me-2">Ver Libros</a>
+    <a href="/loans" class="btn btn-outline-secondary">Ver Préstamos</a>
+  </div>
+
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

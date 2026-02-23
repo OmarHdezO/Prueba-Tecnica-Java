@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Nuevo Préstamo')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container mt-4">
+  <div class="col-md-6">
+
+    <h2>Registrar Préstamo</h2>
+
+    <!-- Error -->
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <!-- Sin libros disponibles -->
+    <div th:if="${#lists.isEmpty(availableBooks)}" class="alert alert-warning">
+      No hay libros disponibles. 
+      <a href="/books/new">Registra uno primero.</a>
+    </div>
+
+    <form th:unless="${#lists.isEmpty(availableBooks)}"
+          th:action="@{/loans/save}" method="post">
+
+      <div class="mb-3">
+        <label class="form-label">Libro *</label>
+        <select name="bookId" class="form-select" required>
+          <option value="">-- Selecciona un libro --</option>
+          <option th:each="book : ${availableBooks}"
+                  th:value="${book.id}"
+                  th:text="${book.title + ' (' + book.author + ')'}"
+                  th:selected="${book.id == preselectedBookId}">
+          </option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Nombre del Solicitante *</label>
+        <input type="text" name="borrowerName" class="form-control"
+               placeholder="Ej: Juan Pérez" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email *</label>
+        <input type="email" name="borrowerEmail" class="form-control"
+               placeholder="Ej: juan@correo.com" required>
+      </div>
+
+      <p class="text-muted small">
+        📅 La fecha límite se calcula automáticamente: hoy + 14 días.
+      </p>
+
+      <button type="submit" class="btn btn-success">Registrar Préstamo</button>
+      <a href="/loans" class="btn btn-secondary ms-2">Cancelar</a>
+
+    </form>
+  </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

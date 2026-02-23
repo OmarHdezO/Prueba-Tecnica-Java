@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Nuevo Libro')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container mt-4">
+  <div class="col-md-6">
+
+    <h2>Registrar Libro</h2>
+
+    <!-- Error del servidor -->
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <form th:action="@{/books/save}" th:object="${book}" method="post">
+
+      <div class="mb-3">
+        <label class="form-label">Título *</label>
+        <input type="text" th:field="*{title}" class="form-control"
+               th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'"
+               placeholder="Ej: El Principito">
+        <div class="invalid-feedback" th:errors="*{title}"></div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Autor *</label>
+        <input type="text" th:field="*{author}" class="form-control"
+               th:classappend="${#fields.hasErrors('author')} ? 'is-invalid'"
+               placeholder="Ej: Antoine de Saint-Exupéry">
+        <div class="invalid-feedback" th:errors="*{author}"></div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">ISBN * (13 caracteres)</label>
+        <input type="text" th:field="*{isbn}" class="form-control"
+               th:classappend="${#fields.hasErrors('isbn')} ? 'is-invalid'"
+               placeholder="Ej: 9780316769174" maxlength="13">
+        <div class="invalid-feedback" th:errors="*{isbn}"></div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Año de Publicación *</label>
+        <input type="number" th:field="*{publicationYear}" class="form-control"
+               th:classappend="${#fields.hasErrors('publicationYear')} ? 'is-invalid'"
+               placeholder="Ej: 1943" min="1000" max="2026">
+        <div class="invalid-feedback" th:errors="*{publicationYear}"></div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Guardar</button>
+      <a href="/books" class="btn btn-secondary ms-2">Cancelar</a>
+
+    </form>
+  </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

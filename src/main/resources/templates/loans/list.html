@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Préstamos')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container mt-4">
+
+  <h2>Préstamos Activos</h2>
+
+  <!-- Mensajes -->
+  <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+  <div th:if="${errorMessage}"   class="alert alert-danger"  th:text="${errorMessage}"></div>
+
+  <a href="/loans/new" class="btn btn-success my-3">+ Nuevo Préstamo</a>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Libro</th>
+        <th>Solicitante</th>
+        <th>Email</th>
+        <th>Fecha Préstamo</th>
+        <th>Fecha Límite</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="loan : ${loans}"
+          th:style="${loan.overdue} ? 'background-color:#fff3cd'">
+        <td th:text="${loan.id}"></td>
+        <td th:text="${loan.book.title}"></td>
+        <td th:text="${loan.borrowerName}"></td>
+        <td th:text="${loan.borrowerEmail}"></td>
+        <td th:text="${#temporals.format(loan.loanDate, 'dd/MM/yyyy')}"></td>
+        <td th:text="${#temporals.format(loan.dueDate,  'dd/MM/yyyy')}"></td>
+        <td>
+          <span th:if="${loan.overdue}"  class="badge bg-danger">Vencido</span>
+          <span th:unless="${loan.overdue}" class="badge bg-success">En plazo</span>
+        </td>
+        <td>
+          <form th:action="@{/loans/{id}/return(id=${loan.id})}"
+                method="post"
+                onsubmit="return confirm('¿Confirmar devolución?')">
+            <button class="btn btn-sm btn-warning">Devolver</button>
+          </form>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(loans)}">
+        <td colspan="8" class="text-center text-muted">No hay préstamos activos.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
